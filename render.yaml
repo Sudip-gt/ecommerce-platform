@@ -1,0 +1,63 @@
+# Render Blueprint — Medusa backend + Postgres + Redis
+# Deploy via: https://render.com/docs/blueprint-spec
+# Push this repo to GitHub, then "New +" -> "Blueprint" on Render and point at it.
+
+databases:
+  - name: esite-postgres
+    plan: basic-256mb # bump to standard for production
+    databaseName: medusa_db
+    user: medusa
+    postgresMajorVersion: "16"
+
+services:
+  - type: redis
+    name: esite-redis
+    plan: free # use 'starter' or higher for production
+    ipAllowList: [] # only internal services can connect
+    maxmemoryPolicy: noeviction
+
+  - type: web
+    name: esite-medusa
+    runtime: node
+    plan: starter
+    region: singapore
+    branch: main
+    rootDir: backend/apps/backend
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm build && npx medusa db:migrate
+    startCommand: cd .medusa/server && pnpm install --prod --frozen-lockfile=false && pnpm exec medusa start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: esite-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: esite-redis
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: COOKIE_SECRET
+        generateValue: true
+      - key: STORE_CORS
+        sync: false # set in Render dashboard, e.g. https://esite.example.com
+      - key: ADMIN_CORS
+        sync: false
+      - key: AUTH_CORS
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CLOUDINARY_UPLOAD_FOLDER
+        value: medusa
+      - key: BACKEND_URL
+        sync: false # e.g. https://api.esite.example.com
