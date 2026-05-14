@@ -1,0 +1,13 @@
+{
+    "name": "esite",
+    "private": true,
+    "packageManager": "pnpm@10.29.2",
+    "scripts": {
+        "dev": "docker compose up -d && sh -c 'trap \"kill 0\" EXIT; pnpm --dir frontend dev & pnpm --dir backend backend:dev & wait'",
+        "dev:frontend": "pnpm --dir frontend dev",
+        "dev:backend": "pnpm --dir backend backend:dev",
+        "build": "pnpm --dir frontend build && pnpm --dir backend build",
+        "docker:up": "docker compose up -d",
+        "docker:down": "docker compose down"
+    }
+}
