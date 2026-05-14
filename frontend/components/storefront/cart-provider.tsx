@@ -22,6 +22,7 @@ type CartContextValue = {
   shippingTotal: number
   taxTotal: number
   isLoading: boolean
+  errorMessage: string | null
   addItem: (variantId: string, quantity?: number) => Promise<void>
   removeItem: (lineItemId: string) => Promise<void>
   setItemQuantity: (lineItemId: string, variantId: string, quantity: number) => Promise<void>
@@ -31,16 +32,19 @@ type CartContextValue = {
 const CartContext = createContext<CartContextValue | null>(null)
 
 const STORAGE_KEY = "esite-cart-id"
+const CART_ERROR_MESSAGE = "Cart is temporarily unavailable. Make sure the backend is running."
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<StoreCart | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
 
     async function bootstrapCart() {
       setIsLoading(true)
+      setErrorMessage(null)
 
       try {
         const storedCartId = window.localStorage.getItem(STORAGE_KEY)
@@ -63,6 +67,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
         if (!cancelled) {
           setCart(newCart)
+        }
+      } catch {
+        if (!cancelled) {
+          setCart(null)
+          setErrorMessage(CART_ERROR_MESSAGE)
         }
       } finally {
         if (!cancelled) {
@@ -88,55 +97,80 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       shippingTotal: cart?.shipping_total || 0,
       taxTotal: cart?.tax_total || 0,
       isLoading,
+      errorMessage,
       addItem: async (variantId, quantity = 1) => {
-        let activeCart = cart
+        try {
+          setErrorMessage(null)
 
-        if (!activeCart) {
-          activeCart = await createCart()
-          window.localStorage.setItem(STORAGE_KEY, activeCart.id)
+          let activeCart = cart
+
+          if (!activeCart) {
+            activeCart = await createCart()
+            window.localStorage.setItem(STORAGE_KEY, activeCart.id)
+          }
+
+          const updatedCart = await addCartLineItem(activeCart.id, variantId, quantity)
+          setCart(updatedCart)
+        } catch {
+          setErrorMessage(CART_ERROR_MESSAGE)
         }
-
-        const updatedCart = await addCartLineItem(activeCart.id, variantId, quantity)
-        setCart(updatedCart)
       },
       removeItem: async (lineItemId) => {
-        if (!cart) {
-          return
-        }
+        try {
+          setErrorMessage(null)
 
-        const updatedCart = await removeCartLineItem(cart.id, lineItemId)
-        setCart(updatedCart)
-      },
-      setItemQuantity: async (lineItemId, variantId, quantity) => {
-        if (!cart) {
-          return
-        }
+          if (!cart) {
+            return
+          }
 
-        if (quantity <= 0) {
           const updatedCart = await removeCartLineItem(cart.id, lineItemId)
           setCart(updatedCart)
-          return
+        } catch {
+          setErrorMessage(CART_ERROR_MESSAGE)
         }
+      },
+      setItemQuantity: async (lineItemId, variantId, quantity) => {
+        try {
+          setErrorMessage(null)
 
-        const cartWithoutItem = await removeCartLineItem(cart.id, lineItemId)
-        const updatedCart = await addCartLineItem(cartWithoutItem.id, variantId, quantity)
-        setCart(updatedCart)
+          if (!cart) {
+            return
+          }
+
+          if (quantity <= 0) {
+            const updatedCart = await removeCartLineItem(cart.id, lineItemId)
+            setCart(updatedCart)
+            return
+          }
+
+          const cartWithoutItem = await removeCartLineItem(cart.id, lineItemId)
+          const updatedCart = await addCartLineItem(cartWithoutItem.id, variantId, quantity)
+          setCart(updatedCart)
+        } catch {
+          setErrorMessage(CART_ERROR_MESSAGE)
+        }
       },
       clearCart: async () => {
-        if (!cart?.items.length) {
-          return
+        try {
+          setErrorMessage(null)
+
+          if (!cart?.items.length) {
+            return
+          }
+
+          let nextCart = cart
+
+          for (const item of cart.items) {
+            nextCart = await removeCartLineItem(nextCart.id, item.id)
+          }
+
+          setCart(nextCart)
+        } catch {
+          setErrorMessage(CART_ERROR_MESSAGE)
         }
-
-        let nextCart = cart
-
-        for (const item of cart.items) {
-          nextCart = await removeCartLineItem(nextCart.id, item.id)
-        }
-
-        setCart(nextCart)
       },
     }),
-    [cart, isLoading]
+    [cart, errorMessage, isLoading]
   )
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

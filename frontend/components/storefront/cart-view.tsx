@@ -12,6 +12,7 @@ export function CartView() {
   const {
     items,
     clearCart,
+    errorMessage,
     isLoading,
     removeItem,
     setItemQuantity,
@@ -62,6 +63,12 @@ export function CartView() {
   return (
     <div className="grid gap-space-xl lg:grid-cols-[1.5fr_0.85fr]">
       <div className="space-y-space-md">
+        {errorMessage ? (
+          <div className="rounded-xl border border-error/20 bg-error-container px-space-md py-space-sm text-body-sm text-on-error-container">
+            {errorMessage}
+          </div>
+        ) : null}
+
         {/* Free Shipping Progress */}
         <div className="p-space-md bg-primary-fixed/30 rounded-xl border border-outline-variant">
           <div className="flex justify-between items-center mb-2">
