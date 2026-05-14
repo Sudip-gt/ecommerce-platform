@@ -291,6 +291,14 @@ export default async function initial_data_seed({
           name: "Merch",
           is_active: true,
         },
+        {
+          name: "Accessories",
+          is_active: true,
+        },
+        {
+          name: "Outerwear",
+          is_active: true,
+        },
       ],
     },
   });
@@ -777,6 +785,154 @@ export default async function initial_data_seed({
                 },
                 {
                   amount: 15,
+                  currency_code: "usd",
+                },
+              ],
+            },
+          ],
+          sales_channels: [
+            {
+              id: defaultSalesChannel.id,
+            },
+          ],
+        },
+        {
+          title: "Medusa Coffee Mug",
+          category_ids: [
+            categoryResult.find((cat) => cat.name === "Accessories")!.id,
+          ],
+          description:
+            "A clean ceramic mug for desk-side coffee breaks and showroom moments.",
+          handle: "coffee-mug",
+          weight: 400,
+          status: ProductStatus.PUBLISHED,
+          shipping_profile_id: shippingProfile.id,
+          images: [
+            {
+              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/coffee-mug.png",
+            },
+          ],
+          options: [
+            {
+              title: "Size",
+              values: ["One Size"],
+            },
+          ],
+          variants: [
+            {
+              title: "One Size",
+              sku: "MUG-ONE-SIZE",
+              options: {
+                Size: "One Size",
+              },
+              prices: [
+                {
+                  amount: 1000,
+                  currency_code: "npr",
+                },
+                {
+                  amount: 12,
+                  currency_code: "usd",
+                },
+              ],
+            },
+          ],
+          sales_channels: [
+            {
+              id: defaultSalesChannel.id,
+            },
+          ],
+        },
+        {
+          title: "Medusa Hoodie",
+          category_ids: [
+            categoryResult.find((cat) => cat.name === "Outerwear")!.id,
+          ],
+          description:
+            "A relaxed heavyweight hoodie made for colder days and layered fits.",
+          handle: "hoodie",
+          weight: 550,
+          status: ProductStatus.PUBLISHED,
+          shipping_profile_id: shippingProfile.id,
+          images: [
+            {
+              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatshirt-vintage-front.png",
+            },
+            {
+              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatshirt-vintage-back.png",
+            },
+          ],
+          options: [
+            {
+              title: "Size",
+              values: ["S", "M", "L", "XL"],
+            },
+          ],
+          variants: [
+            {
+              title: "S",
+              sku: "HOODIE-S",
+              options: {
+                Size: "S",
+              },
+              prices: [
+                {
+                  amount: 2950,
+                  currency_code: "npr",
+                },
+                {
+                  amount: 33,
+                  currency_code: "usd",
+                },
+              ],
+            },
+            {
+              title: "M",
+              sku: "HOODIE-M",
+              options: {
+                Size: "M",
+              },
+              prices: [
+                {
+                  amount: 2950,
+                  currency_code: "npr",
+                },
+                {
+                  amount: 33,
+                  currency_code: "usd",
+                },
+              ],
+            },
+            {
+              title: "L",
+              sku: "HOODIE-L",
+              options: {
+                Size: "L",
+              },
+              prices: [
+                {
+                  amount: 2950,
+                  currency_code: "npr",
+                },
+                {
+                  amount: 33,
+                  currency_code: "usd",
+                },
+              ],
+            },
+            {
+              title: "XL",
+              sku: "HOODIE-XL",
+              options: {
+                Size: "XL",
+              },
+              prices: [
+                {
+                  amount: 2950,
+                  currency_code: "npr",
+                },
+                {
+                  amount: 33,
                   currency_code: "usd",
                 },
               ],
