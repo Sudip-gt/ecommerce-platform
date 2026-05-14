@@ -2,83 +2,125 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
 
-export type CartItem = {
-  id: string
-  variantId: string
-  productId: string
-  title: string
-  variantTitle: string
-  handle: string
-  thumbnail: string | null
-  price: number | null
-  currencyCode: string
-  quantity: number
-}
+import {
+    addCartLineItem,
+    createCart,
+    getCart,
+    removeCartLineItem,
+    type StoreCart,
+    type StoreCartItem,
+} from "@/lib/medusa"
+
+export type CartItem = StoreCartItem
 
 type CartContextValue = {
+  cart: StoreCart | null
   items: CartItem[]
   itemCount: number
-  addItem: (item: Omit<CartItem, "quantity" | "id">) => void
-  removeItem: (variantId: string) => void
-  clearCart: () => void
+  subtotal: number
+  total: number
+  shippingTotal: number
+  taxTotal: number
+  isLoading: boolean
+  addItem: (variantId: string) => Promise<void>
+  removeItem: (lineItemId: string) => Promise<void>
+  clearCart: () => Promise<void>
 }
 
 const CartContext = createContext<CartContextValue | null>(null)
 
-const STORAGE_KEY = "esite-cart"
+const STORAGE_KEY = "esite-cart-id"
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([])
+  const [cart, setCart] = useState<StoreCart | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(STORAGE_KEY)
-    if (!stored) {
-      return
+    let cancelled = false
+
+    async function bootstrapCart() {
+      setIsLoading(true)
+
+      try {
+        const storedCartId = window.localStorage.getItem(STORAGE_KEY)
+
+        if (storedCartId) {
+          try {
+            const existingCart = await getCart(storedCartId)
+            if (!cancelled) {
+              setCart(existingCart)
+              setIsLoading(false)
+            }
+            return
+          } catch {
+            window.localStorage.removeItem(STORAGE_KEY)
+          }
+        }
+
+        const newCart = await createCart()
+        window.localStorage.setItem(STORAGE_KEY, newCart.id)
+
+        if (!cancelled) {
+          setCart(newCart)
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false)
+        }
+      }
     }
 
-    try {
-      setItems(JSON.parse(stored) as CartItem[])
-    } catch {
-      window.localStorage.removeItem(STORAGE_KEY)
+    bootstrapCart()
+
+    return () => {
+      cancelled = true
     }
   }, [])
 
-  useEffect(() => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
-  }, [items])
-
   const value = useMemo<CartContextValue>(
     () => ({
-      items,
-      itemCount: items.reduce((sum, item) => sum + item.quantity, 0),
-      addItem: (item) => {
-        setItems((current) => {
-          const existing = current.find((entry) => entry.variantId === item.variantId)
+      cart,
+      items: cart?.items || [],
+      itemCount: (cart?.items || []).reduce((sum, item) => sum + item.quantity, 0),
+      subtotal: cart?.subtotal || 0,
+      total: cart?.total || 0,
+      shippingTotal: cart?.shipping_total || 0,
+      taxTotal: cart?.tax_total || 0,
+      isLoading,
+      addItem: async (variantId) => {
+        let activeCart = cart
 
-          if (existing) {
-            return current.map((entry) =>
-              entry.variantId === item.variantId
-                ? { ...entry, quantity: entry.quantity + 1 }
-                : entry
-            )
-          }
+        if (!activeCart) {
+          activeCart = await createCart()
+          window.localStorage.setItem(STORAGE_KEY, activeCart.id)
+        }
 
-          return [
-            ...current,
-            {
-              ...item,
-              id: item.variantId,
-              quantity: 1,
-            },
-          ]
-        })
+        const updatedCart = await addCartLineItem(activeCart.id, variantId)
+        setCart(updatedCart)
       },
-      removeItem: (variantId) => {
-        setItems((current) => current.filter((item) => item.variantId !== variantId))
+      removeItem: async (lineItemId) => {
+        if (!cart) {
+          return
+        }
+
+        const updatedCart = await removeCartLineItem(cart.id, lineItemId)
+        setCart(updatedCart)
       },
-      clearCart: () => setItems([]),
+      clearCart: async () => {
+        if (!cart?.items.length) {
+          return
+        }
+
+        let nextCart = cart
+
+        for (const item of cart.items) {
+          nextCart = await removeCartLineItem(nextCart.id, item.id)
+        }
+
+        setCart(nextCart)
+      },
     }),
-    [items]
+    [cart, isLoading]
   )
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

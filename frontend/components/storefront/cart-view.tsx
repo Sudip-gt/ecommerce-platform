@@ -10,13 +10,17 @@ import { formatMoney } from "@/lib/medusa"
 import { cn } from "@/lib/utils"
 
 export function CartView() {
-  const { items, clearCart, removeItem } = useCart()
+  const { items, clearCart, isLoading, removeItem, shippingTotal, subtotal, taxTotal, total } = useCart()
 
-  const total = items.reduce(
-    (sum, item) => sum + (item.price || 0) * item.quantity,
-    0
-  )
-  const currencyCode = items[0]?.currencyCode || "NPR"
+  const currencyCode = "NPR"
+
+  if (isLoading) {
+    return (
+      <div className="rounded-[2rem] border border-border bg-card p-10 text-center text-muted-foreground">
+        Loading cart...
+      </div>
+    )
+  }
 
   if (!items.length) {
     return (
@@ -40,23 +44,23 @@ export function CartView() {
             <CardContent className="flex gap-4 p-4 sm:p-6">
               <div className="relative h-24 w-24 overflow-hidden rounded-2xl bg-muted">
                 {item.thumbnail ? (
-                  <Image src={item.thumbnail} alt={item.title} fill className="object-cover" />
+                  <Image src={item.thumbnail} alt={item.product_title} fill className="object-cover" />
                 ) : null}
               </div>
               <div className="flex flex-1 items-start justify-between gap-4">
                 <div>
-                  <Link href={`/products/${item.handle}`} className="font-semibold tracking-tight">
-                    {item.title}
+                  <Link href={`/products/${item.product_handle}`} className="font-semibold tracking-tight">
+                    {item.product_title}
                   </Link>
-                  <p className="mt-1 text-sm text-muted-foreground">{item.variantTitle}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{item.variant_title}</p>
                   <p className="mt-2 text-sm">Qty {item.quantity}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold">{formatMoney(item.price, item.currencyCode)}</p>
+                  <p className="font-semibold">{formatMoney(item.unit_price, currencyCode)}</p>
                   <Button
                     variant="ghost"
                     className="mt-3 rounded-full px-0 text-muted-foreground"
-                    onClick={() => removeItem(item.variantId)}
+                    onClick={() => void removeItem(item.id)}
                   >
                     Remove
                   </Button>
@@ -72,18 +76,22 @@ export function CartView() {
           <p className="text-sm uppercase tracking-[0.28em] text-muted-foreground">Summary</p>
           <div className="mt-6 flex items-center justify-between text-sm">
             <span>Subtotal</span>
-            <span>{formatMoney(total, currencyCode)}</span>
+            <span>{formatMoney(subtotal, currencyCode)}</span>
           </div>
           <div className="mt-3 flex items-center justify-between text-sm">
             <span>Shipping</span>
-            <span>Calculated later</span>
+            <span>{formatMoney(shippingTotal, currencyCode)}</span>
+          </div>
+          <div className="mt-3 flex items-center justify-between text-sm">
+            <span>Tax</span>
+            <span>{formatMoney(taxTotal, currencyCode)}</span>
           </div>
           <div className="mt-6 flex items-center justify-between border-t border-border pt-6 text-lg font-semibold">
             <span>Total</span>
             <span>{formatMoney(total, currencyCode)}</span>
           </div>
           <Button className="mt-6 w-full rounded-full">Checkout next</Button>
-          <Button variant="outline" className="mt-3 w-full rounded-full" onClick={clearCart}>
+          <Button variant="outline" className="mt-3 w-full rounded-full" onClick={() => void clearCart()}>
             Clear cart
           </Button>
         </CardContent>

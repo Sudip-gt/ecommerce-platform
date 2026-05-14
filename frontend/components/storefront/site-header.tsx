@@ -1,11 +1,11 @@
 "use client"
 
-import Link from "next/link"
 import { ShoppingBag } from "lucide-react"
+import Link from "next/link"
 
+import { useCart } from "@/components/storefront/cart-provider"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
-import { useCart } from "@/components/storefront/cart-provider"
 import { cn } from "@/lib/utils"
 
 export function SiteHeader() {

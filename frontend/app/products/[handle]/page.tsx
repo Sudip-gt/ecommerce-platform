@@ -79,14 +79,7 @@ export default async function ProductPage({
 
             {selectedVariant ? (
               <AddToCartButton
-                productId={product.id}
-                handle={product.handle}
-                title={product.title}
                 variantId={selectedVariant.id}
-                variantTitle={selectedVariant.title}
-                thumbnail={product.thumbnail}
-                price={selectedVariant.price}
-                currencyCode={selectedVariant.currencyCode}
               />
             ) : null}
           </CardContent>

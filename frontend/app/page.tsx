@@ -2,10 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Card, CardContent } from "@/components/ui/card";
 import { formatMoney, getMedusaBackendUrl, listProducts } from "@/lib/medusa";
+import { cn } from "@/lib/utils";
 
 export default async function Home() {
   const products = await listProducts();
