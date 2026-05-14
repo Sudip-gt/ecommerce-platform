@@ -22,8 +22,9 @@ type CartContextValue = {
   shippingTotal: number
   taxTotal: number
   isLoading: boolean
-  addItem: (variantId: string) => Promise<void>
+  addItem: (variantId: string, quantity?: number) => Promise<void>
   removeItem: (lineItemId: string) => Promise<void>
+  setItemQuantity: (lineItemId: string, variantId: string, quantity: number) => Promise<void>
   clearCart: () => Promise<void>
 }
 
@@ -87,7 +88,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       shippingTotal: cart?.shipping_total || 0,
       taxTotal: cart?.tax_total || 0,
       isLoading,
-      addItem: async (variantId) => {
+      addItem: async (variantId, quantity = 1) => {
         let activeCart = cart
 
         if (!activeCart) {
@@ -95,7 +96,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           window.localStorage.setItem(STORAGE_KEY, activeCart.id)
         }
 
-        const updatedCart = await addCartLineItem(activeCart.id, variantId)
+        const updatedCart = await addCartLineItem(activeCart.id, variantId, quantity)
         setCart(updatedCart)
       },
       removeItem: async (lineItemId) => {
@@ -104,6 +105,21 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         }
 
         const updatedCart = await removeCartLineItem(cart.id, lineItemId)
+        setCart(updatedCart)
+      },
+      setItemQuantity: async (lineItemId, variantId, quantity) => {
+        if (!cart) {
+          return
+        }
+
+        if (quantity <= 0) {
+          const updatedCart = await removeCartLineItem(cart.id, lineItemId)
+          setCart(updatedCart)
+          return
+        }
+
+        const cartWithoutItem = await removeCartLineItem(cart.id, lineItemId)
+        const updatedCart = await addCartLineItem(cartWithoutItem.id, variantId, quantity)
         setCart(updatedCart)
       },
       clearCart: async () => {

@@ -22,7 +22,7 @@ export function AddToCartButton(props: Props) {
         setIsPending(true)
 
         try {
-          await addItem(props.variantId)
+          await addItem(props.variantId, 1)
           setAdded(true)
           window.setTimeout(() => setAdded(false), 1200)
         } finally {

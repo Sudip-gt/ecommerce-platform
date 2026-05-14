@@ -1,5 +1,6 @@
 "use client"
 
+import { Minus, Plus } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -10,7 +11,7 @@ import { formatMoney } from "@/lib/medusa"
 import { cn } from "@/lib/utils"
 
 export function CartView() {
-  const { items, clearCart, isLoading, removeItem, shippingTotal, subtotal, taxTotal, total } = useCart()
+  const { items, clearCart, isLoading, removeItem, setItemQuantity, shippingTotal, subtotal, taxTotal, total } = useCart()
 
   const currencyCode = "NPR"
 
@@ -53,7 +54,25 @@ export function CartView() {
                     {item.product_title}
                   </Link>
                   <p className="mt-1 text-sm text-muted-foreground">{item.variant_title}</p>
-                  <p className="mt-2 text-sm">Qty {item.quantity}</p>
+                  <div className="mt-3 flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="icon-sm"
+                      className="rounded-full"
+                      onClick={() => void setItemQuantity(item.id, item.variant_id, item.quantity - 1)}
+                    >
+                      <Minus className="size-3.5" />
+                    </Button>
+                    <span className="min-w-8 text-center text-sm">{item.quantity}</span>
+                    <Button
+                      variant="outline"
+                      size="icon-sm"
+                      className="rounded-full"
+                      onClick={() => void setItemQuantity(item.id, item.variant_id, item.quantity + 1)}
+                    >
+                      <Plus className="size-3.5" />
+                    </Button>
+                  </div>
                 </div>
                 <div className="text-right">
                   <p className="font-semibold">{formatMoney(item.unit_price, currencyCode)}</p>
