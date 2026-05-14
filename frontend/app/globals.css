@@ -4,76 +4,163 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* BoldEra Prints design system — shadcn token overrides */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --background: #f9f9fa;
+  --foreground: #1a1c1d;
+  --card: #ffffff;
+  --card-foreground: #1a1c1d;
+  --popover: #ffffff;
+  --popover-foreground: #1a1c1d;
+  --primary: #00654b;
+  --primary-foreground: #ffffff;
+  --secondary: #eeeeef;
+  --secondary-foreground: #1a1c1d;
+  --muted: #f3f3f4;
+  --muted-foreground: #5d5e60;
+  --accent: #eeeeef;
+  --accent-foreground: #1a1c1d;
+  --destructive: #ba1a1a;
+  --border: #e2e2e3;
+  --input: #e2e2e3;
+  --ring: #008060;
+  --radius: 0.5rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1a1c1d;
+  --sidebar-primary: #00654b;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eeeeef;
+  --sidebar-accent-foreground: #1a1c1d;
+  --sidebar-border: #e2e2e3;
+  --sidebar-ring: #008060;
+  --chart-1: #00654b;
+  --chart-2: #75d9b3;
+  --chart-3: #5d5e60;
+  --chart-4: #8f3f37;
+  --chart-5: #006c50;
 }
 
+/* BoldEra Prints — Tailwind v4 @theme tokens (named utilities) */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* BoldEra named surface/role colors */
+  --color-surface: #f9f9fa;
+  --color-surface-dim: #dadadb;
+  --color-surface-bright: #f9f9fa;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f3f3f4;
+  --color-surface-container: #eeeeef;
+  --color-surface-container-high: #e8e8e9;
+  --color-surface-container-highest: #e2e2e3;
+  --color-on-surface: #1a1c1d;
+  --color-on-surface-variant: #3e4944;
+  --color-inverse-surface: #2f3132;
+  --color-inverse-on-surface: #f0f1f2;
+  --color-outline: #6e7a73;
+  --color-outline-variant: #bdc9c2;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #008060;
+  --color-on-primary-container: #d6ffeb;
+  --color-inverse-primary: #75d9b3;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #dfdfe0;
+  --color-on-secondary-container: #616364;
+  --color-tertiary: #8f3f37;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #ae564d;
+  --color-on-tertiary-container: #fff2f1;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  --color-primary-fixed: #92f6cf;
+  --color-primary-fixed-dim: #75d9b3;
+  --color-on-primary-fixed: #002116;
+  --color-on-primary-fixed-variant: #00513c;
+  --color-secondary-fixed: #e2e2e3;
+  --color-secondary-fixed-dim: #c6c6c7;
+  --color-on-secondary-fixed: #1a1c1d;
+  --color-on-secondary-fixed-variant: #454748;
+  --color-surface-variant: #e2e2e3;
+
+  /* Font families — Inter for everything */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading-lg: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading-md: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading-sm: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body-md: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body-sm: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-label-md: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-button: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display-lg: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display-lg-mobile: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Type scale */
+  --text-display-lg: 42px;
+  --text-display-lg--line-height: 48px;
+  --text-display-lg--font-weight: 700;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-lg-mobile: 32px;
+  --text-display-lg-mobile--line-height: 36px;
+  --text-display-lg-mobile--font-weight: 700;
+  --text-heading-lg: 24px;
+  --text-heading-lg--line-height: 30px;
+  --text-heading-lg--font-weight: 600;
+  --text-heading-md: 20px;
+  --text-heading-md--line-height: 26px;
+  --text-heading-md--font-weight: 600;
+  --text-heading-sm: 16px;
+  --text-heading-sm--line-height: 24px;
+  --text-heading-sm--font-weight: 600;
+  --text-body-md: 14px;
+  --text-body-md--line-height: 20px;
+  --text-body-md--font-weight: 400;
+  --text-body-sm: 13px;
+  --text-body-sm--line-height: 18px;
+  --text-body-sm--font-weight: 400;
+  --text-label-md: 12px;
+  --text-label-md--line-height: 16px;
+  --text-label-md--font-weight: 500;
+  --text-label-md--letter-spacing: 0.05em;
+  --text-button: 14px;
+  --text-button--line-height: 20px;
+  --text-button--font-weight: 500;
+
+  /* Named spacing */
+  --spacing-space-xs: 0.25rem;
+  --spacing-space-sm: 0.5rem;
+  --spacing-space-md: 1rem;
+  --spacing-space-lg: 1.5rem;
+  --spacing-space-xl: 2rem;
+  --spacing-space-xxl: 4rem;
+  --spacing-gutter: 1rem;
+  --spacing-margin-mobile: 1rem;
+  --spacing-margin-desktop: 2rem;
+
+  /* Max-width container */
+  --container-container-max: 1200px;
+
+  /* Radius scale */
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -83,60 +170,58 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --background: #1a1c1d;
+  --foreground: #f0f1f2;
+  --card: #2f3132;
+  --card-foreground: #f0f1f2;
+  --popover: #2f3132;
+  --popover-foreground: #f0f1f2;
+  --primary: #75d9b3;
+  --primary-foreground: #002116;
+  --secondary: #2f3132;
+  --secondary-foreground: #f0f1f2;
+  --muted: #2f3132;
+  --muted-foreground: #c6c6c7;
+  --accent: #2f3132;
+  --accent-foreground: #f0f1f2;
+  --destructive: #ffb4ab;
+  --border: #3e4944;
+  --input: #3e4944;
+  --ring: #75d9b3;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+/* Material Symbols Outlined icon font */
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  display: inline-block;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
   }
+
   html {
     @apply font-sans;
   }
